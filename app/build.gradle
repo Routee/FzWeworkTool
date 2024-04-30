@@ -6,11 +6,11 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "org.yameida.worktool"
+        applicationId "com.functorz.worktool"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 28011
-        versionName "2.8.1"
+        versionCode 38008
+        versionName "3.3.8"
     }
 
     buildTypes {

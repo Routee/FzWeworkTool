@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.yameida.worktool">
+    package="com.functorz.worktool">
 
     <queries>
         <package android:name="com.tencent.wework" />
@@ -26,7 +26,7 @@
         tools:ignore="QueryAllPackagesPermission" />
 
     <application
-        android:name="org.yameida.worktool.MyApplication"
+        android:name="com.functorz.worktool.MyApplication"
         android:allowBackup="true"
         tools:replace="android:allowBackup"
         android:icon="@mipmap/ic_launcher"
@@ -39,7 +39,7 @@
         android:requestLegacyExternalStorage="true">
 
         <activity
-            android:name="org.yameida.worktool.activity.ListenActivity"
+            android:name="com.functorz.worktool.activity.ListenActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme">
@@ -49,33 +49,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.yameida.worktool.activity.LoginActivity"
+            android:name="com.functorz.worktool.activity.LoginActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name="org.yameida.worktool.activity.SettingsActivity"
+            android:name="com.functorz.worktool.activity.SettingsActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name="org.yameida.worktool.activity.SettingsAdvanceActivity"
+            android:name="com.functorz.worktool.activity.SettingsAdvanceActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name="org.yameida.worktool.activity.BrowserActivity"
+            android:name="com.functorz.worktool.activity.BrowserActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name="org.yameida.worktool.activity.FloatViewGuideActivity"
+            android:name="com.functorz.worktool.activity.FloatViewGuideActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:theme="@style/AppTheme">
         </activity>
         <activity
-            android:name="org.yameida.worktool.activity.AccessibilityGuideActivity"
+            android:name="com.functorz.worktool.activity.AccessibilityGuideActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:theme="@style/AppTheme">
         </activity>
@@ -86,7 +86,7 @@
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.TranslucentNoTitleFullscreen" />
         <service
-            android:name="org.yameida.worktool.service.WeworkService"
+            android:name="com.functorz.worktool.service.WeworkService"
             android:enabled="true"
             android:exported="true"
             android:label="@string/app_name"
@@ -106,7 +106,7 @@
 
         <provider
             android:name=".utils.GenericFileProvider"
-            android:authorities="org.yameida.worktool.fileprovider"
+            android:authorities="com.functorz.worktool.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

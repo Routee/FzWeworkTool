@@ -43,8 +43,8 @@
 -keep class okio.**{*;}
 
 #bean
--dontwarn org.yameida.worktool.model.**
--keep class org.yameida.worktool.model.**{*;}
+-dontwarn com.functorz.worktool.model.**
+-keep class com.functorz.worktool.model.**{*;}
 
 #talkingdata
 -dontwarn com.tendcloud.tenddata.**
