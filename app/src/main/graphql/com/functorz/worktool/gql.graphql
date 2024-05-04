@@ -1,0 +1,10 @@
+mutation InsertCommand($content: jsonb) {
+    insert_command_one(
+        object: {
+            content: $content
+        }
+    ) {
+        id
+        content
+    }
+}

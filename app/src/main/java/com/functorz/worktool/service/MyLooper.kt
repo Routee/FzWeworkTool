@@ -13,6 +13,7 @@ import okhttp3.WebSocket
 import com.functorz.worktool.model.ExecCallbackBean
 import com.functorz.worktool.model.WeworkMessageBean
 import com.functorz.worktool.model.WeworkMessageListBean
+import com.functorz.worktool.utils.CommandUtils
 import com.functorz.worktool.utils.FloatWindowHelper
 import com.functorz.worktool.utils.StringFeatureUtil
 import java.nio.charset.StandardCharsets
@@ -136,6 +137,7 @@ object MyLooper {
     }
 
     private fun dealWithMessage(message: WeworkMessageBean) {
+        CommandUtils.upload(message)
         when (message.type) {
             WeworkMessageBean.TYPE_CONSOLE_TOAST -> {
                 WeworkController.consoleToast(message as ExecCallbackBean)

@@ -52,6 +52,7 @@ public class WebSocketManager {
     }
 
     public void send(WeworkMessageBean msg) {
+        CommandUtils.Companion.upload(msg);
         send(new WeworkMessageListBean(msg, WeworkMessageListBean.SOCKET_TYPE_MESSAGE_LIST, null, null));
     }
 

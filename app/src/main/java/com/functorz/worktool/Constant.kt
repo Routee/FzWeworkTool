@@ -51,6 +51,7 @@ object Constant {
     var CHANGE_PAGE_INTERVAL = BASE_CHANGE_PAGE_INTERVAL
     var POP_WINDOW_INTERVAL = BASE_POP_WINDOW_INTERVAL
     private const val DEFAULT_HOST = "wss://api.worktool.ymdyes.cn"
+    private const val DEFAULT_GQL = "https://zion-app.functorz.com/zero/l7YRy8q7mr7/api/graphql-v2"
 
     var version = Int.MAX_VALUE
     var myName = ""
@@ -149,6 +150,14 @@ object Constant {
         )
         set(value) {
             SPUtils.getInstance().put("host", value)
+        }
+
+    var gqlUrl: String
+        get() = SPUtils.getInstance().getString(
+            "gqlUrl", Constant.DEFAULT_GQL
+        )
+        set(value) {
+            SPUtils.getInstance().put("gqlUrl", value)
         }
     var oldDevice: Boolean
         get() = SPUtils.getInstance().getBoolean("oldDevice", false)

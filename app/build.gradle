@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.apollographql.apollo'
 
 android {
     compileSdkVersion 30
@@ -37,4 +38,11 @@ dependencies {
     implementation  'com.umeng.umsdk:common:9.4.7'// 必选
     implementation  'com.umeng.umsdk:asms:1.4.1'// 必选
     implementation 'com.umeng.umsdk:apm:1.5.2' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
+
+    implementation("com.apollographql.apollo:apollo-runtime:2.5.9")
+    implementation("com.apollographql.apollo:apollo-coroutines-support:2.5.9")
+}
+
+apollo {
+    generateKotlinModels.set(true)
 }
