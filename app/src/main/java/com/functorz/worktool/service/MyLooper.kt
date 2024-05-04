@@ -9,11 +9,9 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SPUtils
 import com.functorz.worktool.Constant
 import com.google.gson.reflect.TypeToken
-import okhttp3.WebSocket
 import com.functorz.worktool.model.ExecCallbackBean
 import com.functorz.worktool.model.WeworkMessageBean
 import com.functorz.worktool.model.WeworkMessageListBean
-import com.functorz.worktool.utils.CommandUtils
 import com.functorz.worktool.utils.FloatWindowHelper
 import com.functorz.worktool.utils.StringFeatureUtil
 import java.nio.charset.StandardCharsets
@@ -77,7 +75,7 @@ object MyLooper {
         }
     }
 
-    fun onMessage(webSocket: WebSocket?, text: String) {
+    fun onMessage(text: String) {
         val messageList: WeworkMessageListBean<WeworkMessageBean> =
             GsonUtils.fromJson<WeworkMessageListBean<WeworkMessageBean>>(text, object : TypeToken<WeworkMessageListBean<ExecCallbackBean>>(){}.type)
         if (messageList.socketType == WeworkMessageListBean.SOCKET_TYPE_HEARTBEAT) {
@@ -137,7 +135,6 @@ object MyLooper {
     }
 
     private fun dealWithMessage(message: WeworkMessageBean) {
-        CommandUtils.upload(message)
         when (message.type) {
             WeworkMessageBean.TYPE_CONSOLE_TOAST -> {
                 WeworkController.consoleToast(message as ExecCallbackBean)

@@ -146,7 +146,7 @@ class WeworkService : AccessibilityService() {
                 }"
             )
             try {
-                MyLooper.onMessage(webSocket, text)
+                MyLooper.onMessage(text)
             } catch (e: Exception) {
                 LogUtils.e(e)
                 error(e.message)

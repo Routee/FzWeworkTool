@@ -2,8 +2,15 @@ package com.functorz.worktool.utils;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.ApolloSubscriptionCall;
+import com.apollographql.apollo.subscription.SubscriptionTransport;
+import com.apollographql.apollo.subscription.WebSocketSubscriptionTransport;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.functorz.worktool.CommandSubscription;
 import com.functorz.worktool.model.WeworkMessageBean;
 import com.hjq.toast.ToastUtils;
 import com.functorz.worktool.Constant;
@@ -49,10 +56,10 @@ public class WebSocketManager {
         socket.send("{\"td\":" + System.currentTimeMillis() + "}");
         webSocketManager.put(url, this);
         task = heartCheckStart();
+        CommandUtils.Companion.subscribeCommand();
     }
 
     public void send(WeworkMessageBean msg) {
-        CommandUtils.Companion.upload(msg);
         send(new WeworkMessageListBean(msg, WeworkMessageListBean.SOCKET_TYPE_MESSAGE_LIST, null, null));
     }
 
@@ -84,6 +91,7 @@ public class WebSocketManager {
     public void send(WeworkMessageListBean msg, boolean log) {
         String json = GsonUtils.toJson(msg);
         boolean success = socket.send(json);
+        CommandUtils.Companion.upload(json);
         if (log && success)
             LogUtils.d(url, json, "通讯消息发送成功！");
         if (!success)

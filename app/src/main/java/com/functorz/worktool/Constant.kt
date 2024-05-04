@@ -66,6 +66,8 @@ object Constant {
     val transformation = "AES/CBC/PKCS7Padding"
     val wssRegex = "^wss".toRegex()
     val wsRegex = "^ws".toRegex()
+    val httpsRegex = "^https".toRegex()
+    val httpRegex = "^http".toRegex()
     val suffixString = "(-.*)?(…)?(\\(\\d+\\))?$"
     val suffixRegex = "(-.*)?(…)?(\\(\\d+\\))?$".toRegex()
     val groupSuffixRegex = "(…)?(\\(\\d+\\))?$".toRegex()
@@ -190,5 +192,9 @@ object Constant {
     ).replace(
         wsRegex, "http"
     )
-
+    fun getGqlSubscriptionUrl() = gqlUrl.replace(
+        httpsRegex, "wss"
+    ).replace(
+        httpRegex, "ws"
+    )
 }

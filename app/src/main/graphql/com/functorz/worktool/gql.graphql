@@ -8,3 +8,9 @@ mutation InsertCommand($content: jsonb) {
         content
     }
 }
+
+subscription Command {
+    command {
+        content
+    }
+}

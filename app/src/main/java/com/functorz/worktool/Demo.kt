@@ -45,7 +45,7 @@ object Demo {
                 ]
             }
         """.trimIndent()
-        MyLooper.onMessage(null, json)
+        MyLooper.onMessage(json)
     }
 
 }
