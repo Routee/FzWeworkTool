@@ -68,6 +68,7 @@ object Constant {
     val wsRegex = "^ws".toRegex()
     val httpsRegex = "^https".toRegex()
     val httpRegex = "^http".toRegex()
+    val subscriptionRegex = "^graphql-v2".toRegex()
     val suffixString = "(-.*)?(…)?(\\(\\d+\\))?$"
     val suffixRegex = "(-.*)?(…)?(\\(\\d+\\))?$".toRegex()
     val groupSuffixRegex = "(…)?(\\(\\d+\\))?$".toRegex()
@@ -196,5 +197,5 @@ object Constant {
         httpsRegex, "wss"
     ).replace(
         httpRegex, "ws"
-    )
+    ).replace(gqlUrl.substring(gqlUrl.lastIndexOf("/")), "/graphql-subscription")
 }

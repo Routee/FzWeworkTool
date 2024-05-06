@@ -1,5 +1,6 @@
 package com.functorz.worktool.utils
 
+import android.util.Log
 import com.apollographql.apollo.ApolloCall.Callback
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
@@ -69,21 +70,23 @@ class CommandUtils {
                 val okHttpClient = OkHttpClient.Builder()
                     .addInterceptor(AuthorizationInterceptor())
                     .build()
+                val gqlSubscriptionUrl = Constant.getGqlSubscriptionUrl()
                 val apolloClient = ApolloClient.builder()
                     .serverUrl(Constant.gqlUrl)
                     .subscriptionTransportFactory(
                         WebSocketSubscriptionTransport.Factory(
-                            Constant.getGqlSubscriptionUrl(),
+                            gqlSubscriptionUrl,
                             okHttpClient
                         )
-                    )
+                    ).okHttpClient(okHttpClient)
                     .build()
                 apolloClient.subscribe(CommandSubscription()).toFlow()
                     .retryWhen { cause, attempt ->
                         delay(attempt * 1000)
                         LogUtils.eTag(
                             "FzWorkTool",
-                            cause.message.plus("\r\n").plus(cause.cause?.message)
+                            cause.message.plus("\r\n").plus(cause.cause?.message).plus("\r\n")
+                                .plus("attempt = ${attempt}")
                         )
                         true
                     }

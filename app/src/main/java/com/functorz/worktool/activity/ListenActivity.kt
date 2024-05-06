@@ -93,6 +93,14 @@ class ListenActivity : AppCompatActivity() {
             showInputHostDialog()
             true
         }
+        tv_gql.text = Constant.gqlUrl
+        tv_gql.setOnClickListener {
+            showSelectGqlDialog()
+        }
+        tv_gql.setOnLongClickListener {
+            showInputGqlDialog()
+            true
+        }
         val version = "${AppUtils.getAppVersionName()}     Android ${DeviceUtils.getSDKVersionName()} ${DeviceUtils.getManufacturer()} ${DeviceUtils.getModel()}"
         val deviceRooted = CheckRoot.isDeviceRooted()
         val hook = CheckHook.isHook(applicationContext)
@@ -228,6 +236,26 @@ class ListenActivity : AppCompatActivity() {
         }
     }
 
+    private fun showSelectGqlDialog() {
+        val gqlList = SPUtils.getInstance().getStringSet("gql_list", mutableSetOf(
+            Constant.gqlUrl))
+        if (gqlList.isNotEmpty()) {
+            val hostArray = gqlList.toTypedArray()
+            QMUIDialog.CheckableDialogBuilder(this)
+                .setTitle(getString(R.string.gql_list))
+                .addItems(hostArray) { dialog, which ->
+                    Constant.gqlUrl = hostArray[which]
+                    tv_gql.text = hostArray[which]
+                    // todo: 链接测试
+                    // HostTestHelper.testWs()
+                    dialog.dismiss()
+                }
+                .setCheckedIndex(gqlList.indexOf(Constant.gqlUrl))
+                .create(R.style.QMUI_Dialog)
+                .show()
+        }
+    }
+
     private fun showInputHostDialog() {
         ToastUtils.showLong("请输入专线网络")
         val builder = QMUIDialog.EditTextDialogBuilder(this)
@@ -261,6 +289,51 @@ class ListenActivity : AppCompatActivity() {
                         Constant.host = text.toString()
                         tv_host.text = text
                         HostTestHelper.testWs()
+                        dialog.dismiss()
+                    } else {
+                        ToastUtils.showLong("格式异常！")
+                    }
+                } else {
+                    ToastUtils.showLong("请勿为空！")
+                }
+            }
+            .create(R.style.QMUI_Dialog).show()
+    }
+
+    private fun showInputGqlDialog() {
+        ToastUtils.showLong("请输入GQL地址")
+        val builder = QMUIDialog.EditTextDialogBuilder(this)
+        builder.setTitle(getString(R.string.tip))
+            .setPlaceholder(getString(R.string.input_new_host))
+            .setDefaultText(tv_gql.text)
+            .setInputType(InputType.TYPE_CLASS_TEXT)
+            .addAction(getString(R.string.delete)) { dialog, index ->
+                val gqlList = SPUtils.getInstance().getStringSet("gql_list", mutableSetOf(
+                    Constant.gqlUrl))
+                if (gqlList.size > 1) {
+                    gqlList.remove(Constant.gqlUrl)
+                    Constant.gqlUrl = gqlList.elementAt(0)
+                    tv_gql.text = Constant.gqlUrl
+                    // todo: test network
+                    // HostTestHelper.testWs()
+                    SPUtils.getInstance().put("gql_list", gqlList)
+                    dialog.dismiss()
+                } else {
+                    ToastUtils.showLong("至少保留一个gql！")
+                }
+            }
+            .addAction(getString(R.string.cancel)) { dialog, index -> dialog.dismiss() }
+            .addAction(getString(R.string.add)) { dialog, index ->
+                val text = builder.editText.text
+                if (text != null && text.isNotEmpty()) {
+                    if (text.matches("https{1,2}://[^/]+.*".toRegex())) {
+                        val hostList = SPUtils.getInstance().getStringSet("gql_list", mutableSetOf(
+                            Constant.gqlUrl))
+                        hostList.add(text.toString())
+                        SPUtils.getInstance().put("gql_list", hostList)
+                        Constant.gqlUrl = text.toString()
+                        tv_gql.text = text
+                        // HostTestHelper.testWs()
                         dialog.dismiss()
                     } else {
                         ToastUtils.showLong("格式异常！")
