@@ -1,6 +1,5 @@
 package com.functorz.worktool.utils
 
-import android.util.Log
 import com.apollographql.apollo.ApolloCall.Callback
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
@@ -10,6 +9,7 @@ import com.apollographql.apollo.exception.ApolloException
 import com.apollographql.apollo.subscription.WebSocketSubscriptionTransport
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.functorz.worktool.CommandSubscription
 import com.functorz.worktool.Constant
 import com.functorz.worktool.InsertCommandMutation
@@ -50,12 +50,12 @@ class CommandUtils {
                         override fun onResponse(response: Response<InsertCommandMutation.Data>) {
                             LogUtils.dTag(
                                 "FzWorkTool",
-                                response.data?.insert_command_one?.content ?: ""
+                                " insert command response:" + response.data?.insert_command_one?.content ?: ""
                             )
                         }
 
                         override fun onFailure(e: ApolloException) {
-                            LogUtils.eTag("FzWorkTool", e.toString())
+                            LogUtils.eTag("FzWorkTool ","insert command failed:" + e.toString())
                         }
                     })
             }
@@ -85,19 +85,20 @@ class CommandUtils {
                         delay(attempt * 1000)
                         LogUtils.eTag(
                             "FzWorkTool",
-                            cause.message.plus("\r\n").plus(cause.cause?.message).plus("\r\n")
+                            "subscribe failed:" + cause.message.plus("\r\n").plus(cause.cause?.message).plus("\r\n")
                                 .plus("attempt = ${attempt}")
                         )
+                        ToastUtils.showShort("${attempt}s后重试")
                         true
                     }
                     .collect(object : FlowCollector<Response<CommandSubscription.Data>> {
                         override suspend fun emit(value: Response<CommandSubscription.Data>) {
                             try {
                                 val content = value.data?.command?.last()?.content
-                                LogUtils.dTag("FzWorkTool", content)
+                                LogUtils.dTag("FzWorkTool", " received message: $content")
                                 MyLooper.onMessage(GsonUtils.toJson(content))
                             } catch (e: Exception) {
-                                LogUtils.eTag("FzWorkTool", e)
+                                LogUtils.eTag("FzWorkTool", "received message wagith error:$e")
                                 error(e.message)
                             }
                         }
