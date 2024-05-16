@@ -12,7 +12,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.functorz.worktool.CommandSubscription
 import com.functorz.worktool.Constant
-import com.functorz.worktool.InsertCommandMutation
+import com.functorz.worktool.MessageMutation
 import com.functorz.worktool.service.MyLooper
 import com.functorz.worktool.service.error
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
-import java.lang.Exception
 
 class CommandUtils {
     companion object {
@@ -44,18 +43,19 @@ class CommandUtils {
         fun upload(message: String) {
             val client = getClient()
             GlobalScope.launch {
-                val insertCommandMutation = InsertCommandMutation(Input.optional(message))
-                client.mutate(insertCommandMutation)
-                    .enqueue(object : Callback<InsertCommandMutation.Data>() {
-                        override fun onResponse(response: Response<InsertCommandMutation.Data>) {
-                            LogUtils.dTag(
-                                "FzWorkTool",
-                                " insert command response:" + response.data?.insert_command_one?.content ?: ""
-                            )
+                val mutation = MessageMutation(
+                    message,
+                    Constant.versionId,
+                    Constant.actionFlowId
+                )
+                client.mutate(mutation)
+                    .enqueue(object : Callback<MessageMutation.Data>() {
+                        override fun onResponse(response: Response<MessageMutation.Data>) {
+                            LogUtils.eTag("FzWorkTool success", "insert command success")
                         }
 
                         override fun onFailure(e: ApolloException) {
-                            LogUtils.eTag("FzWorkTool ","insert command failed:" + e.toString())
+                            LogUtils.eTag("FzWorkTool ", "insert command failed:$e")
                         }
                     })
             }
@@ -85,7 +85,8 @@ class CommandUtils {
                         delay(attempt * 1000)
                         LogUtils.eTag(
                             "FzWorkTool",
-                            "subscribe failed:" + cause.message.plus("\r\n").plus(cause.cause?.message).plus("\r\n")
+                            "subscribe failed:" + cause.message.plus("\r\n")
+                                .plus(cause.cause?.message).plus("\r\n")
                                 .plus("attempt = ${attempt}")
                         )
                         ToastUtils.showShort("${attempt}s后重试")

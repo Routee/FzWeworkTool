@@ -117,6 +117,29 @@
                 android:textSize="@dimen/setting_end_font_size"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="12dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="37dp">
+
+                <EditText
+                    android:id="@+id/versionId"
+                    android:layout_width="30dp"
+                    android:inputType="number"
+                    android:textSize="12sp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"></EditText>
+
+                <EditText
+                    android:id="@+id/actionFlowId"
+                    android:layout_width="0dp"
+                    android:textSize="12sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"></EditText>
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

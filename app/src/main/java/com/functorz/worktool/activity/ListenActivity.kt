@@ -11,7 +11,9 @@ import kotlinx.android.synthetic.main.activity_listen.*
 import com.functorz.worktool.*
 import android.content.*
 import android.os.IBinder
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import com.blankj.utilcode.constant.PermissionConstants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
@@ -74,6 +76,30 @@ class ListenActivity : AppCompatActivity() {
         iv_settings.setOnClickListener {
             SettingsActivity.enterActivity(this)
         }
+        versionId.setText(Constant.versionId.toString())
+        actionFlowId.setText(Constant.actionFlowId)
+        versionId.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Constant.versionId = Integer.parseInt(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+        actionFlowId.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Constant.actionFlowId = s.toString()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
         et_channel.setText(Constant.robotId)
         bt_save.setOnClickListener {
             val channel = et_channel.text.toString().trim()

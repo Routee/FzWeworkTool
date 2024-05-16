@@ -1,12 +1,9 @@
-mutation InsertCommand($content: jsonb) {
-    insert_command_one(
-        object: {
-            content: $content
-        }
-    ) {
-        id
-        content
-    }
+mutation Message($args: Json!, $versionId: Int!, $actionFlowId: String!) {
+    fz_invoke_action_flow(
+        versionId: $versionId,
+        actionFlowId: $actionFlowId,
+        args: $args
+    )
 }
 
 subscription Command {
