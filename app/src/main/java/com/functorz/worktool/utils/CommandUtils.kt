@@ -1,9 +1,12 @@
 package com.functorz.worktool.utils
 
+import android.R
 import com.apollographql.apollo.ApolloCall.Callback
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Input
+import com.apollographql.apollo.api.CustomTypeAdapter
+import com.apollographql.apollo.api.CustomTypeValue
 import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.api.ScalarType
 import com.apollographql.apollo.coroutines.toFlow
 import com.apollographql.apollo.exception.ApolloException
 import com.apollographql.apollo.subscription.WebSocketSubscriptionTransport
@@ -15,6 +18,10 @@ import com.functorz.worktool.Constant
 import com.functorz.worktool.MessageMutation
 import com.functorz.worktool.service.MyLooper
 import com.functorz.worktool.service.error
+import com.functorz.worktool.type.CustomType
+import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -24,13 +31,16 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import org.json.JSONObject
+
 
 class CommandUtils {
     companion object {
         val cachedClient: Map<String, ApolloClient> = mapOf()
 
         private fun newClient(): ApolloClient {
-            val client = ApolloClient.builder().serverUrl(Constant.gqlUrl).build()
+            val client = ApolloClient.builder()
+                .serverUrl(Constant.gqlUrl).build()
             cachedClient.plus(Pair(Constant.gqlUrl, client))
             return client
         }
@@ -42,14 +52,14 @@ class CommandUtils {
         @OptIn(DelicateCoroutinesApi::class)
         fun upload(message: String) {
             val client = getClient()
+            val obj = GsonUtils.fromJson<Map<String, Any>>(
+                message, object : TypeToken<Map<String, *>>() {}.type
+            )
             GlobalScope.launch {
                 val mutation = MessageMutation(
-                    message,
-                    Constant.versionId,
-                    Constant.actionFlowId
+                    obj, Constant.versionId, Constant.actionFlowId
                 )
-                client.mutate(mutation)
-                    .enqueue(object : Callback<MessageMutation.Data>() {
+                client.mutate(mutation).enqueue(object : Callback<MessageMutation.Data>() {
                         override fun onResponse(response: Response<MessageMutation.Data>) {
                             LogUtils.eTag("FzWorkTool success", "insert command success")
                         }
@@ -62,26 +72,22 @@ class CommandUtils {
         }
 
         @OptIn(
-            InternalCoroutinesApi::class, ExperimentalCoroutinesApi::class,
+            InternalCoroutinesApi::class,
+            ExperimentalCoroutinesApi::class,
             DelicateCoroutinesApi::class
         )
         fun subscribeCommand() {
             GlobalScope.launch {
-                val okHttpClient = OkHttpClient.Builder()
-                    .addInterceptor(AuthorizationInterceptor())
-                    .build()
+                val okHttpClient =
+                    OkHttpClient.Builder().addInterceptor(AuthorizationInterceptor()).build()
                 val gqlSubscriptionUrl = Constant.getGqlSubscriptionUrl()
-                val apolloClient = ApolloClient.builder()
-                    .serverUrl(Constant.gqlUrl)
-                    .subscriptionTransportFactory(
-                        WebSocketSubscriptionTransport.Factory(
-                            gqlSubscriptionUrl,
-                            okHttpClient
-                        )
-                    ).okHttpClient(okHttpClient)
-                    .build()
-                apolloClient.subscribe(CommandSubscription()).toFlow()
-                    .retryWhen { cause, attempt ->
+                val apolloClient =
+                    ApolloClient.builder().serverUrl(Constant.gqlUrl).subscriptionTransportFactory(
+                            WebSocketSubscriptionTransport.Factory(
+                                gqlSubscriptionUrl, okHttpClient
+                            )
+                        ).okHttpClient(okHttpClient).build()
+                apolloClient.subscribe(CommandSubscription()).toFlow().retryWhen { cause, attempt ->
                         delay(attempt * 1000)
                         LogUtils.eTag(
                             "FzWorkTool",
@@ -91,8 +97,7 @@ class CommandUtils {
                         )
                         ToastUtils.showShort("${attempt}s后重试")
                         true
-                    }
-                    .collect(object : FlowCollector<Response<CommandSubscription.Data>> {
+                    }.collect(object : FlowCollector<Response<CommandSubscription.Data>> {
                         override suspend fun emit(value: Response<CommandSubscription.Data>) {
                             try {
                                 val content = value.data?.command?.last()?.content

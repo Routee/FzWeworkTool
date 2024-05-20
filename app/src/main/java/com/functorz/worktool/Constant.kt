@@ -53,7 +53,7 @@ object Constant {
     var CHANGE_PAGE_INTERVAL = BASE_CHANGE_PAGE_INTERVAL
     var POP_WINDOW_INTERVAL = BASE_POP_WINDOW_INTERVAL
     private const val DEFAULT_HOST = "wss://api.worktool.ymdyes.cn"
-    private const val DEFAULT_GQL = "https://zion-app.functorz.com/zero/l7YRy8q7mr7/api/graphql-v2"
+    private const val DEFAULT_GQL = "https://zion-app.functorz.com/zero/GQAnbZeMQjg/api/graphql-v2"
     var versionId = 15
     var actionFlowId: String = "1475c062-05cf-40cb-95bb-e549aee1a34b"
 
