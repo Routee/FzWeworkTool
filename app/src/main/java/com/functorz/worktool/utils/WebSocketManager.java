@@ -2,24 +2,13 @@ package com.functorz.worktool.utils;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.apollographql.apollo.ApolloClient;
-import com.apollographql.apollo.ApolloSubscriptionCall;
-import com.apollographql.apollo.subscription.SubscriptionTransport;
-import com.apollographql.apollo.subscription.WebSocketSubscriptionTransport;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.LogUtils;
-import com.functorz.worktool.CommandSubscription;
 import com.functorz.worktool.model.WeworkMessageBean;
-import com.google.gson.Gson;
 import com.hjq.toast.ToastUtils;
 import com.functorz.worktool.Constant;
 import com.functorz.worktool.model.WeworkMessageListBean;
 import com.functorz.worktool.service.WeworkController;
-
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;

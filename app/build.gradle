@@ -45,4 +45,5 @@ dependencies {
 
 apollo {
     generateKotlinModels.set(true)
+    // customTypeMapping['Json'] = "com.functorz.worktool.model.WeworkMessageListBean<Any>"
 }

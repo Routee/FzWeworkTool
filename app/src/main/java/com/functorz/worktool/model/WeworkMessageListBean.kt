@@ -7,7 +7,7 @@ import com.functorz.worktool.Constant
 import java.util.*
 import kotlin.collections.ArrayList
 
-class WeworkMessageListBean<T> {
+open class WeworkMessageListBean<T> {
 
     companion object {
         const val SOCKET_TYPE_HEARTBEAT = 0
@@ -64,3 +64,10 @@ class WeworkMessageListBean<T> {
     }
 
 }
+
+class TempMessage(
+    weworkMessageBean: WeworkMessageBean,
+    type: Int,
+    messageId: String? = null,
+    meta: String? = null
+) : WeworkMessageListBean<WeworkMessageBean>(weworkMessageBean, type, messageId, meta) {}
